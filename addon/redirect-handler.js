@@ -30,12 +30,14 @@ var RedirectHandler = EmberObject.extend({
       var pendingRequestKey = windowObject.localStorage.getItem(CURRENT_REQUEST_KEY);
       if (pendingRequestKey) {
         var url = windowObject.location.toString();
-        if (url.indexOf('access_token') > -1 && url.indexOf('next-action') === -1) {
+        if (
+          (url.indexOf('access_token') > -1 && url.indexOf('next-action') === -1)
+          || (url.indexOf('access_token') > -1 && url.indexOf('next-action=event-edit') > -1)
+        ) {
           windowObject.localStorage.removeItem(CURRENT_REQUEST_KEY);
           windowObject.localStorage.setItem(WARNING_KEY, 'true');
           windowObject.localStorage.setItem(pendingRequestKey, url);
-
-          if (url.indexOf('token_type') > -1) {
+          if (url.indexOf('token_type') > -1 || url.indexOf('next-action=event-edit') > -1) {
             var remoteServiceName = configuration.remoteServiceName || 'popup';
             if(remoteServiceName === 'popup'){
               // NOTE : If a single provider has been configured to use the 'iframe'
